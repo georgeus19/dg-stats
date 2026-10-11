@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 0fb254c3-f8a4-4c2f-837b-ffe3386560f8
+
+localResources:
+  collections:
+    - ../pdga-player-272132.postman_collection.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/PDGA player 272132 — tested example queries: 584fa874-ab90-4a8b-a5d4-cc04c7a435b9

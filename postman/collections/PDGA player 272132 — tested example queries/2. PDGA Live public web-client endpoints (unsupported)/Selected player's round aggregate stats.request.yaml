@@ -1,0 +1,5 @@
+$kind: http-request
+description: "The direct per-scorecard aggregate-stat query. It returns statId, statCount, statOpportunityCount, and statValue. Common IDs: 1 fairway hits; 2 C1 in regulation; 3 C2 in regulation; 4 parked; 5 scramble; 6 C1 putting; 7 C1X putting; 8 C2 putting; 9 OB rate; 21 OB count. For the selected example it returns fairways 12/18, C1 regulation 7/18, C2 regulation 9/18, C1 putting 17/23, C1X putting 9/15, C2 putting 1/2, and OB count 1."
+url: "{{live_base}}/api/v1/feat/live-scores/{{score_id}}/round-stats"
+method: GET
+order: 4000

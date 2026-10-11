@@ -1,0 +1,11 @@
+$kind: http-request
+description: "Official annual summary: rating, tournaments count, rating rounds used, points, and prize. It does not return fairway/C1/C2 statistics."
+url: "{{official_base}}/services/json/player-statistics?year={{year}}&pdga_number={{pdga_number}}&limit=1"
+method: GET
+headers:
+  Cookie: "{{pdga_session_name}}={{pdga_sessid}}"
+queryParams:
+  year: "{{year}}"
+  pdga_number: "{{pdga_number}}"
+  limit: "1"
+order: 4000

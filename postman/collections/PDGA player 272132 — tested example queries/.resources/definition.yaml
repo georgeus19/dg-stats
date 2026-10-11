@@ -1,0 +1,28 @@
+$kind: collection
+description: |-
+  A tested request flow for PDGA player 272132 (Kryštof Hrubý). Start with the official login if you want documented player and event-search requests. The PDGA Live requests are public web-client endpoints observed on 2026-10-11; they are useful for exploration but are undocumented and not a supported production API.
+
+  Tested tracked event: TUTA Liga 2026 #4 - Bor u Tachova, TournID 105723, division RAH, round 1. Sending ‘Round roster and scores’ refreshes result_id, score_id, and round_id for the selected player and round.
+
+  Important limitation: the documented REST API has no endpoint that lists every tournament a particular player entered. Its event search lists events by metadata. To enumerate a player’s history, use an authorized PDGA data feed or discover events separately, then test each event’s results.
+
+  Official API docs: https://www.pdga.com/dev/api/rest/v1/auth and https://www.pdga.com/dev/api/rest/v1/services
+variables:
+  official_base: https://api.pdga.com
+  live_base: https://www.pdga.com
+  pdga_number: "272132"
+  pdga_username: ""
+  pdga_password: ""
+  pdga_sessid: ""
+  pdga_session_name: ""
+  pdga_token: ""
+  year: "2026"
+  country: CZ
+  start_date: 2026-01-01
+  end_date: 2026-12-31
+  tournament_id: "105723"
+  division: RAH
+  round: "1"
+  result_id: "212653913"
+  score_id: "28964988"
+  round_id: "122913425"

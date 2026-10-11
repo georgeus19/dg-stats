@@ -1,0 +1,5 @@
+$kind: http-request
+description: Returns scoreThrows by hole. Each hole has holeThrows with scoreOrdinal, penaltyCount, and a raw zoneId/distanceToTarget/penalty/drop-zone payload. The endpoint takes score_id, not round_id. Preserve raw zoneId; its numeric mapping is not a documented public contract.
+url: "{{live_base}}/api/v1/feat/live-scores/{{score_id}}/throw-timelines"
+method: GET
+order: 6000

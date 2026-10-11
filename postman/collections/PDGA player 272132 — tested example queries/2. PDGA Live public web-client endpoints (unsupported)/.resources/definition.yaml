@@ -1,0 +1,3 @@
+$kind: collection
+description: These requests were tested against the public PDGA Live web client for the selected player/event. They require no authentication at the time of research, but PDGA does not document them in its REST API. They can change or be withdrawn and should not be used by a production app without PDGA permission.
+order: 2000

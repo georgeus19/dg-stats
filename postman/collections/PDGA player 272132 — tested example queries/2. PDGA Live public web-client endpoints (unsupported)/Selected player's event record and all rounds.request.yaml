@@ -1,0 +1,7 @@
+$kind: http-request
+description: For the example player/event, returns all played rounds, per-round ScoreID, round score/rating, hole scores, and layout data.
+url: "{{live_base}}/apps/tournament/live-api/live_results_fetch_player?ResultID={{result_id}}"
+method: GET
+queryParams:
+  ResultID: "{{result_id}}"
+order: 3000

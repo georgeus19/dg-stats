@@ -1,0 +1,20 @@
+$kind: http-request
+description: "Returns one object per scorecard. Select the entry where score.scoreId equals {{score_id}}. Each stat has statId, statCount, statOpportunityCount, and statValue. Example round 1: fairways 12/18, C1 regulation 7/18, C2 regulation 9/18, C1 putting 17/23, C1X putting 9/15, C2 putting 1/2, and OB 1."
+url: "{{live_base}}/api/v1/feat/stats/round-stats/{{round_id}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const body = pm.response.json();
+      const targetId = String(pm.collectionVariables.get('score_id'));
+      const playerStats = body.find(function (entry) {
+        return String(entry.score && entry.score.scoreId) === targetId;
+      });
+      pm.test('Selected player has a round-stat record', function () {
+        pm.expect(playerStats, 'No matching scoreId in response').to.exist;
+      });
+      if (playerStats) {
+        console.log('Selected player round stats', playerStats.stats);
+      }
+    language: text/javascript
+order: 5000

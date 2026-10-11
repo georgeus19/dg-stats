@@ -1,0 +1,10 @@
+$kind: http-request
+description: Official metadata lookup for the selected tournament.
+url: "{{official_base}}/services/json/event?tournament_id={{tournament_id}}&limit=1"
+method: GET
+headers:
+  Cookie: "{{pdga_session_name}}={{pdga_sessid}}"
+queryParams:
+  tournament_id: "{{tournament_id}}"
+  limit: "1"
+order: 6000

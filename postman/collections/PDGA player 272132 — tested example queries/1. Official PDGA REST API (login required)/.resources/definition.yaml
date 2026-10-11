@@ -1,0 +1,3 @@
+$kind: collection
+description: The documented API requires an approved PDGA developer account and a session. Enter your credentials into the collection variables, send Login, then send the other requests in this folder. Do not save a collection with your password in it.
+order: 1000

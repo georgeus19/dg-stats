@@ -1,0 +1,7 @@
+$kind: http-request
+description: For 105723, this returns FullStats=true, division RAH, two rounds, and layout information.
+url: "{{live_base}}/apps/tournament/live-api/live_results_fetch_event?TournID={{tournament_id}}"
+method: GET
+queryParams:
+  TournID: "{{tournament_id}}"
+order: 1000

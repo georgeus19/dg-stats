@@ -1,0 +1,28 @@
+$kind: http-request
+name: Round roster and scores — sets player/round IDs
+description: "Returns all scorecards in one division/round. The test script finds PDGA #{{pdga_number}} and saves result_id, score_id, and round_id for the next requests. Change round to 2 and send again to analyse the second round."
+url: "{{live_base}}/apps/tournament/live-api/live_results_fetch_round?TournID={{tournament_id}}&Division={{division}}&Round={{round}}"
+method: GET
+queryParams:
+  TournID: "{{tournament_id}}"
+  Division: "{{division}}"
+  Round: "{{round}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      const body = pm.response.json();
+      const scores = body.data && body.data.scores ? body.data.scores : [];
+      const player = scores.find(function (score) {
+        return String(score.PDGANum) === String(pm.collectionVariables.get('pdga_number'));
+      });
+      pm.test('Selected player occurs in this tournament round', function () {
+        pm.expect(player, 'No matching player: check tournament_id, division, and round').to.exist;
+      });
+      if (player) {
+        pm.collectionVariables.set('result_id', player.ResultID);
+        pm.collectionVariables.set('score_id', player.ScoreID);
+        pm.collectionVariables.set('round_id', player.RoundID);
+        console.log('Saved IDs', { resultId: player.ResultID, scoreId: player.ScoreID, roundId: player.RoundID });
+      }
+    language: text/javascript
+order: 2000

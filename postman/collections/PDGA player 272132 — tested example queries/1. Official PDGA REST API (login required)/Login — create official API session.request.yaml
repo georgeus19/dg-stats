@@ -1,0 +1,27 @@
+$kind: http-request
+description: Documented authentication endpoint. Its test script saves sessid, session_name, and token as collection variables.
+url: "{{official_base}}/services/json/user/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "username": "{{pdga_username}}",
+      "password": "{{pdga_password}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const body = pm.response.json();
+      pm.test('PDGA login returned a session', function () {
+        pm.expect(body.sessid).to.exist;
+        pm.expect(body.session_name).to.exist;
+        pm.expect(body.token).to.exist;
+      });
+      pm.collectionVariables.set('pdga_sessid', body.sessid);
+      pm.collectionVariables.set('pdga_session_name', body.session_name);
+      pm.collectionVariables.set('pdga_token', body.token);
+    language: text/javascript
+order: 1000

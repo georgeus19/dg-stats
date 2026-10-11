@@ -1,0 +1,305 @@
+{
+  "info": {
+    "_postman_id": "4f5b4909-0d1a-41dd-8d7e-1e1d2888f42e",
+    "name": "PDGA player 272132 — tested example queries",
+    "description": "A tested request flow for PDGA player 272132 (Kryštof Hrubý). Start with the official login if you want documented player and event-search requests. The PDGA Live requests are public web-client endpoints observed on 2026-10-11; they are useful for exploration but are undocumented and not a supported production API.\n\nTested tracked event: TUTA Liga 2026 #4 - Bor u Tachova, TournID 105723, division RAH, round 1. Sending ‘Round roster and scores’ refreshes result_id, score_id, and round_id for the selected player and round.\n\nImportant limitation: the documented REST API has no endpoint that lists every tournament a particular player entered. Its event search lists events by metadata. To enumerate a player’s history, use an authorized PDGA data feed or discover events separately, then test each event’s results.\n\nOfficial API docs: https://www.pdga.com/dev/api/rest/v1/auth and https://www.pdga.com/dev/api/rest/v1/services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "official_base",
+      "value": "https://api.pdga.com"
+    },
+    {
+      "key": "live_base",
+      "value": "https://www.pdga.com"
+    },
+    {
+      "key": "pdga_number",
+      "value": "272132"
+    },
+    {
+      "key": "pdga_username",
+      "value": ""
+    },
+    {
+      "key": "pdga_password",
+      "value": ""
+    },
+    {
+      "key": "pdga_sessid",
+      "value": ""
+    },
+    {
+      "key": "pdga_session_name",
+      "value": ""
+    },
+    {
+      "key": "pdga_token",
+      "value": ""
+    },
+    {
+      "key": "year",
+      "value": "2026"
+    },
+    {
+      "key": "country",
+      "value": "CZ"
+    },
+    {
+      "key": "start_date",
+      "value": "2026-01-01"
+    },
+    {
+      "key": "end_date",
+      "value": "2026-12-31"
+    },
+    {
+      "key": "tournament_id",
+      "value": "105723"
+    },
+    {
+      "key": "division",
+      "value": "RAH"
+    },
+    {
+      "key": "round",
+      "value": "1"
+    },
+    {
+      "key": "result_id",
+      "value": "212653913"
+    },
+    {
+      "key": "score_id",
+      "value": "28964988"
+    },
+    {
+      "key": "round_id",
+      "value": "122913425"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Official PDGA REST API (login required)",
+      "description": "The documented API requires an approved PDGA developer account and a session. Enter your credentials into the collection variables, send Login, then send the other requests in this folder. Do not save a collection with your password in it.",
+      "item": [
+        {
+          "name": "Login — create official API session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{pdga_username}}\",\n  \"password\": \"{{pdga_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{official_base}}/services/json/user/login",
+            "description": "Documented authentication endpoint. Its test script saves sessid, session_name, and token as collection variables."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('PDGA login returned a session', function () {",
+                  "  pm.expect(body.sessid).to.exist;",
+                  "  pm.expect(body.session_name).to.exist;",
+                  "  pm.expect(body.token).to.exist;",
+                  "});",
+                  "pm.collectionVariables.set('pdga_sessid', body.sessid);",
+                  "pm.collectionVariables.set('pdga_session_name', body.session_name);",
+                  "pm.collectionVariables.set('pdga_token', body.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify official API session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{pdga_token}}"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{pdga_session_name}}={{pdga_sessid}}"
+              }
+            ],
+            "url": "{{official_base}}/services/json/system/connect",
+            "description": "Optional documented session check."
+          }
+        },
+        {
+          "name": "Player details — PDGA #272132",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{pdga_session_name}}={{pdga_sessid}}"
+              }
+            ],
+            "url": "{{official_base}}/services/json/players?pdga_number={{pdga_number}}&limit=1",
+            "description": "Official player-search query. Returns membership/profile fields and rating where available."
+          }
+        },
+        {
+          "name": "Player annual summary — 2026",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{pdga_session_name}}={{pdga_sessid}}"
+              }
+            ],
+            "url": "{{official_base}}/services/json/player-statistics?year={{year}}&pdga_number={{pdga_number}}&limit=1",
+            "description": "Official annual summary: rating, tournaments count, rating rounds used, points, and prize. It does not return fairway/C1/C2 statistics."
+          }
+        },
+        {
+          "name": "Tournament list — Czech Republic, 2026",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{pdga_session_name}}={{pdga_sessid}}"
+              }
+            ],
+            "url": "{{official_base}}/services/json/event?country={{country}}&start_date={{start_date}}&end_date={{end_date}}&limit=200&offset=0",
+            "description": "Official event search. This is a date/country event list, not a player-participation list. Use the returned tournament_id to inspect an event."
+          }
+        },
+        {
+          "name": "Tournament details — selected tournament ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{pdga_session_name}}={{pdga_sessid}}"
+              }
+            ],
+            "url": "{{official_base}}/services/json/event?tournament_id={{tournament_id}}&limit=1",
+            "description": "Official metadata lookup for the selected tournament."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. PDGA Live public web-client endpoints (unsupported)",
+      "description": "These requests were tested against the public PDGA Live web client for the selected player/event. They require no authentication at the time of research, but PDGA does not document them in its REST API. They can change or be withdrawn and should not be used by a production app without PDGA permission.",
+      "item": [
+        {
+          "name": "Event metadata, divisions, layouts, and rounds",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/apps/tournament/live-api/live_results_fetch_event?TournID={{tournament_id}}",
+            "description": "For 105723, this returns FullStats=true, division RAH, two rounds, and layout information."
+          }
+        },
+        {
+          "name": "Round roster and scores — sets player/round IDs",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/apps/tournament/live-api/live_results_fetch_round?TournID={{tournament_id}}&Division={{division}}&Round={{round}}",
+            "description": "Returns all scorecards in one division/round. The test script finds PDGA #{{pdga_number}} and saves result_id, score_id, and round_id for the next requests. Change round to 2 and send again to analyse the second round."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "const scores = body.data && body.data.scores ? body.data.scores : [];",
+                  "const player = scores.find(function (score) {",
+                  "  return String(score.PDGANum) === String(pm.collectionVariables.get('pdga_number'));",
+                  "});",
+                  "pm.test('Selected player occurs in this tournament round', function () {",
+                  "  pm.expect(player, 'No matching player: check tournament_id, division, and round').to.exist;",
+                  "});",
+                  "if (player) {",
+                  "  pm.collectionVariables.set('result_id', player.ResultID);",
+                  "  pm.collectionVariables.set('score_id', player.ScoreID);",
+                  "  pm.collectionVariables.set('round_id', player.RoundID);",
+                  "  console.log('Saved IDs', { resultId: player.ResultID, scoreId: player.ScoreID, roundId: player.RoundID });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Selected player's event record and all rounds",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/apps/tournament/live-api/live_results_fetch_player?ResultID={{result_id}}",
+            "description": "For the example player/event, returns all played rounds, per-round ScoreID, round score/rating, hole scores, and layout data."
+          }
+        },
+        {
+          "name": "Selected player's round aggregate stats",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/api/v1/feat/live-scores/{{score_id}}/round-stats",
+            "description": "The direct per-scorecard aggregate-stat query. It returns statId, statCount, statOpportunityCount, and statValue. Common IDs: 1 fairway hits; 2 C1 in regulation; 3 C2 in regulation; 4 parked; 5 scramble; 6 C1 putting; 7 C1X putting; 8 C2 putting; 9 OB rate; 21 OB count. For the selected example it returns fairways 12/18, C1 regulation 7/18, C2 regulation 9/18, C1 putting 17/23, C1X putting 9/15, C2 putting 1/2, and OB count 1."
+          }
+        },
+        {
+          "name": "Round aggregate stats — all players",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/api/v1/feat/stats/round-stats/{{round_id}}",
+            "description": "Returns one object per scorecard. Select the entry where score.scoreId equals {{score_id}}. Each stat has statId, statCount, statOpportunityCount, and statValue. Example round 1: fairways 12/18, C1 regulation 7/18, C2 regulation 9/18, C1 putting 17/23, C1X putting 9/15, C2 putting 1/2, and OB 1."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "const targetId = String(pm.collectionVariables.get('score_id'));",
+                  "const playerStats = body.find(function (entry) {",
+                  "  return String(entry.score && entry.score.scoreId) === targetId;",
+                  "});",
+                  "pm.test('Selected player has a round-stat record', function () {",
+                  "  pm.expect(playerStats, 'No matching scoreId in response').to.exist;",
+                  "});",
+                  "if (playerStats) {",
+                  "  console.log('Selected player round stats', playerStats.stats);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Throw timeline — selected player and round",
+          "request": {
+            "method": "GET",
+            "url": "{{live_base}}/api/v1/feat/live-scores/{{score_id}}/throw-timelines",
+            "description": "Returns scoreThrows by hole. Each hole has holeThrows with scoreOrdinal, penaltyCount, and a raw zoneId/distanceToTarget/penalty/drop-zone payload. The endpoint takes score_id, not round_id. Preserve raw zoneId; its numeric mapping is not a documented public contract."
+          }
+        }
+      ]
+    }
+  ]
+}

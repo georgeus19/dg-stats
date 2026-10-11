@@ -1,0 +1,8 @@
+$kind: http-request
+description: Optional documented session check.
+url: "{{official_base}}/services/json/system/connect"
+method: POST
+headers:
+  X-CSRF-Token: "{{pdga_token}}"
+  Cookie: "{{pdga_session_name}}={{pdga_sessid}}"
+order: 2000

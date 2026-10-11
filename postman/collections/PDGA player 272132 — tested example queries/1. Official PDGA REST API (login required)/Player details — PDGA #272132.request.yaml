@@ -1,0 +1,10 @@
+$kind: http-request
+description: Official player-search query. Returns membership/profile fields and rating where available.
+url: "{{official_base}}/services/json/players?pdga_number={{pdga_number}}&limit=1"
+method: GET
+headers:
+  Cookie: "{{pdga_session_name}}={{pdga_sessid}}"
+queryParams:
+  pdga_number: "{{pdga_number}}"
+  limit: "1"
+order: 3000

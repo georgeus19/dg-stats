@@ -1,0 +1,13 @@
+$kind: http-request
+description: Official event search. This is a date/country event list, not a player-participation list. Use the returned tournament_id to inspect an event.
+url: "{{official_base}}/services/json/event?country={{country}}&start_date={{start_date}}&end_date={{end_date}}&limit=200&offset=0"
+method: GET
+headers:
+  Cookie: "{{pdga_session_name}}={{pdga_sessid}}"
+queryParams:
+  country: "{{country}}"
+  start_date: "{{start_date}}"
+  end_date: "{{end_date}}"
+  limit: "200"
+  offset: "0"
+order: 5000
